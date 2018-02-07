@@ -4,7 +4,7 @@ help:
 DATA?="${HOME}/Data"
 GPU?=0
 DOCKER_FILE=Dockerfile
-DOCKER=GPU=$(GPU) nvidia-docker
+DOCKER=docker
 BACKEND=tensorflow
 PYTHON_VERSION?=3.6
 CUDA_VERSION?=9.0
@@ -22,7 +22,7 @@ ipython: build
 	$(DOCKER) run -it -v $(SRC):/src/workspace -v $(DATA):/data --env KERAS_BACKEND=$(BACKEND) keras ipython
 
 notebook: build
-	$(DOCKER) run -it -v $(SRC):/src/workspace -v $(DATA):/data --net=host --env KERAS_BACKEND=$(BACKEND) keras
+	$(DOCKER) run -it -v $(SRC):/src/workspace -v $(DATA):/data -p 8888:8888 --env KERAS_BACKEND=$(BACKEND) keras
 
 test: build
 	$(DOCKER) run -it -v $(SRC):/src/workspace -v $(DATA):/data --env KERAS_BACKEND=$(BACKEND) keras py.test $(TEST)
